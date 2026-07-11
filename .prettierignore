@@ -1,0 +1,13 @@
+dist
+node_modules
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Upstream Stability Nexus template files — left as-is so this PR does not
+# introduce unrelated formatting churn on documentation it does not own.
+README.md
+COPYRIGHT.md
+Contributors.md
+DCO.md
+.coderabbit.yml

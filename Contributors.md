@@ -12,4 +12,4 @@ are made under the terms of the [Developer Certificate of Origin](DCO.md).
 | Name                             | Github Username    | Discord Username   | Email Address                |     
 | -------------------------------- | ------------------ | ------------------ | ---------------------------- |
 | Bruno Woltzenlogel Paleo         | @Zahnentferner     | @b.wp              | zahnentferner@gmail.com      |
-| TODO                             | TODO               | TODO               | TODO                         |
+| Vishwajeet Sunil Tulse           | @VishwajeetTulse   | @vishwajeet_2684   | vishwajeettulse@gmail.com    |
