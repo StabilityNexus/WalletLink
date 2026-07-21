@@ -11,14 +11,20 @@ import { cookieStorage, createConfig, createStorage, http } from 'wagmi'
  * connection happens entirely in the browser via EIP-1193 + EIP-6963, so no
  * WalletConnect relay or hosted service is involved.
  */
-export type CreateWalletLinkConfigParameters = {
+export type CreateWalletLinkConfigParameters<
+  chains extends readonly [Chain, ...Chain[]] = readonly [Chain, ...Chain[]],
+> = {
   /** Chains the dapp supports. At least one is required. */
-  chains: readonly [Chain, ...Chain[]]
+  chains: chains
   /**
    * Per-chain RPC transports. When omitted, a default `http()` transport is
    * created for every chain (uses each chain's public RPC URLs).
+   *
+   * Keyed to `chains`, so supplying this means supplying one for every chain —
+   * the same requirement wagmi enforces. A chain left out would otherwise only
+   * fail at runtime, the first time something used it.
    */
-  transports?: Record<number, Transport>
+  transports?: Record<chains[number]['id'], Transport>
   /**
    * Enable SSR-safe hydration. Set this to `true` in Next.js apps. When `true`
    * and no `storage` is provided, cookie-based storage is used automatically so
@@ -68,14 +74,23 @@ export type CreateWalletLinkConfigParameters = {
  * `transports` for chains without a public RPC, or to avoid leaking user IPs to
  * public RPC providers.
  */
-export function createWalletLinkConfig(parameters: CreateWalletLinkConfigParameters) {
+export function createWalletLinkConfig<const chains extends readonly [Chain, ...Chain[]]>(
+  parameters: CreateWalletLinkConfigParameters<chains>,
+) {
   const { chains, transports, ssr = false, storage, connectors = [] } = parameters
 
   return createConfig({
     chains,
     connectors,
     multiInjectedProviderDiscovery: true,
-    transports: transports ?? Object.fromEntries(chains.map((chain) => [chain.id, http()])),
+    // Cast: built from `chains`, so every chain id is covered by construction,
+    // but `Object.fromEntries` widens the keys back to `string`.
+    transports:
+      transports ??
+      (Object.fromEntries(chains.map((chain) => [chain.id, http()])) as Record<
+        chains[number]['id'],
+        Transport
+      >),
     ssr,
     // Under SSR, fall back to cookie storage so server-rendered and client
     // markup agree on connection state (prevents React hydration mismatch).
