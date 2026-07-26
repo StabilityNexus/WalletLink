@@ -33,10 +33,12 @@ version 3:
 > obligated to do so. If you do not wish to do so, delete this exception
 > statement from your version.
 
-What this means in practice: a dapp can import and link WalletLink under any
-license; it does not become GPL by using this library. The copyleft applies to
-WalletLink itself, so modifications to WalletLink remain free software under the
-GPL.
+What this means in practice: an application can link WalletLink from its own,
+independent code (code not derived from WalletLink) and keep that code under the
+license of its choice, so long as each linked module's own license terms are met;
+it does not become GPL merely by linking this library. The copyleft still applies
+to WalletLink itself, so modifications to WalletLink remain free software under
+the GPL.
 
 The full text of the GNU General Public License version 3 follows.
 

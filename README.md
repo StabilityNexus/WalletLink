@@ -251,9 +251,11 @@ WalletLink is licensed under the **GNU General Public License v3.0 (or later) wi
 a linking exception**, SPDX `GPL-3.0-or-later WITH Classpath-exception-2.0`. See
 [LICENSE.md](LICENSE.md).
 
-The linking exception means a dapp can import and link WalletLink under **any**
-license without itself becoming GPL. The copyleft applies to WalletLink itself:
-modifications to this library stay free software under the GPL.
+The linking exception means an application can link WalletLink from its own,
+independent code (code not derived from WalletLink) and keep that code under the
+license of its choice; linking alone does not make the application GPL, as long as
+each linked module's own license terms are met. The copyleft still applies to
+WalletLink itself: modifications to this library stay free software under the GPL.
 
 ---
 
