@@ -72,14 +72,16 @@ Consumers keep every wagmi hook they already use (`useAccount`, `useWriteContrac
 
 ## Why
 
-As of 2025 WalletConnect / ReOwn is proprietary-licensed and requires a hosted
-relay plus a `projectId` to function. That fails the free, open-source,
-SaaS-independent, censorship-resistant bar Stability Nexus dapps aim for.
+Reown AppKit (the connect stack formerly published as WalletConnect) is
+proprietary-licensed: its Community License requires every app to connect through
+Reown's hosted relay network using a `projectId`. That fails the free,
+open-source, SaaS-independent, censorship-resistant bar Stability Nexus dapps aim
+for.
 
-Every current major wallet supports EIP-6963, which lets a page discover injected
-wallets through a local `window` event handshake, with no server in the loop. WalletLink
-builds on that (via wagmi, which already implements it) so extension-wallet
-connection works with zero SaaS dependencies.
+Major wallets such as MetaMask and Coinbase Wallet support EIP-6963, which lets a
+page discover injected wallets through a local `window` event handshake, with no
+server in the loop. WalletLink builds on that (via wagmi, which already implements
+it) so extension-wallet connection works with zero SaaS dependencies.
 
 Cross-device connection (desktop dapp ↔ phone wallet) is the one thing that
 genuinely needs a relay; there is no production self-hostable WalletConnect relay,
@@ -89,12 +91,12 @@ so WalletLink is injected-only for now and leaves a seam for a relay transport l
 
 ## Status
 
-* [x] `createWalletLinkConfig`: wagmi `Config` builder, no `projectId`.
-* [x] `useWalletLink`: headless connect / account hook.
-* [ ] `WalletLinkButton` + `WalletLinkModal`: styled connect UI.
-* [ ] Published to a package registry.
-* [ ] Integrated into a Stability Nexus dapp (Fate-EVM-Frontend is the proof case).
-* [ ] Cross-device (mobile) support via a self-hostable relay transport.
+- [x] `createWalletLinkConfig`: wagmi `Config` builder, no `projectId`.
+- [x] `useWalletLink`: headless connect / account hook.
+- [ ] `WalletLinkButton` + `WalletLinkModal`: styled connect UI.
+- [ ] Published to a package registry.
+- [ ] Integrated into a Stability Nexus dapp (Fate-EVM-Frontend is the proof case).
+- [ ] Cross-device (mobile) support via a self-hostable relay transport.
 
 ---
 
@@ -126,7 +128,12 @@ No `projectId`, no relay, no hosted service.
 
 ### Installation
 
-Install WalletLink alongside its peer dependencies:
+> Not published yet. The registry command below is how you will install WalletLink
+> once the first release is out. Until then, use it from source: clone this repo,
+> run `npm install && npm run build`, and link the result into your app (for
+> example with `npm link`, or a file/git dependency that builds the `dist` output).
+
+Once published, install WalletLink alongside its peer dependencies:
 
 ```bash
 npm install @stability-nexus/walletlink wagmi viem @tanstack/react-query
@@ -189,6 +196,12 @@ export function Connect() {
 
   if (isConnected) {
     return <button onClick={() => disconnect()}>{address}</button>
+  }
+
+  // Empty during SSR and the first client render (see the note below), so show a
+  // discovery state rather than a bare, wallet-less control.
+  if (wallets.length === 0) {
+    return <p>Looking for wallets…</p>
   }
 
   return wallets.map((wallet) => (
