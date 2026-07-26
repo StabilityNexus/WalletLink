@@ -2,9 +2,8 @@
 <div name="readme-top"></div>
 
 <!-- Organization Logo -->
-<div align="center" style="display: flex; align-items: center; justify-content: center; gap: 16px;">
+<div align="center">
   <img alt="Stability Nexus" src="public/stability.svg" width="175">
-  <img src="public/todo-project-logo.svg" width="175" />
 </div>
 
 &nbsp;
@@ -12,9 +11,7 @@
 <!-- Organization Name -->
 <div align="center">
 
-[![Static Badge](https://img.shields.io/badge/Stability_Nexus-/TODO-228B22?style=for-the-badge&labelColor=FFC517)](https://TODO.stability.nexus/)
-
-<!-- Correct deployed url to be added -->
+[![Static Badge](https://img.shields.io/badge/Stability_Nexus-/WalletLink-228B22?style=for-the-badge&labelColor=FFC517)](https://github.com/StabilityNexus/WalletLink)
 
 </div>
 
@@ -48,69 +45,74 @@
 ---
 
 <div align="center">
-<h1>TODO: Project Name</h1>
+<h1>WalletLink</h1>
 </div>
 
-[TODO](https://TODO.stability.nexus/) is a ... TODO: Project Description.
+**WalletLink** is a free, open-source, SaaS-independent way to connect a frontend
+to EVM wallets. Discovery and connection happen entirely in the browser over two
+finalized Ethereum standards, [EIP-1193][eip1193] (provider interface) and
+[EIP-6963][eip6963] (multi-injected-provider discovery): no hosted relay, no API
+key, no third-party service in the connection path.
+
+It is a thin, wagmi-native drop-in replacement for the WalletConnect-based connect
+stacks (RainbowKit, ConnectKit, Web3Modal) that Stability Nexus dapps use today.
+Consumers keep every wagmi hook they already use (`useAccount`, `useWriteContract`,
+…); WalletLink only replaces the connection layer.
+
+> [!NOTE]
+> **Pre-release.** The package is not yet published to a registry and the API may
+> still change. The connect-UI components (`WalletLinkButton`, `WalletLinkModal`)
+> are in progress; today the library ships the config builder and the headless
+> hook.
+
+[eip1193]: https://eips.ethereum.org/EIPS/eip-1193
+[eip6963]: https://eips.ethereum.org/EIPS/eip-6963
 
 ---
 
-## Project Maturity
+## Why
 
-TODO: In the checklist below, mark the items that have been completed and delete items that are not applicable to the current project:
+As of 2025 WalletConnect / ReOwn is proprietary-licensed and requires a hosted
+relay plus a `projectId` to function. That fails the free, open-source,
+SaaS-independent, censorship-resistant bar Stability Nexus dapps aim for.
 
-* [ ] The project has a logo.
-* [ ] The project has a favicon.
-* [ ] The protocol:
-   - [ ] has been described and formally specified in a paper.
-   - [ ] has had its main properties mathematically proven.
-   - [ ] has been formally verified.
-* [ ] The smart contracts:
-   - [ ] were thoroughly reviewed by at least two knights of The Stable Order.
-   - [ ] were deployed to:
-      - [ ] Ergo
-      - [ ] Cardano
-      - [ ] EVM Chains:
-        - [ ] Ethereum Classic
-        - [ ] Ethereum
-        - [ ] Polygon
-        - [ ] BSC
-        - [ ] Base
-* [ ] The mobile app:
-   - [ ] has an _About_ page containing the Stability Nexus's logo and pointing to the social media accounts of the Stability Nexus.
-   - [ ] is available for download as a release in this repo.
-   - [ ] is available in the relevant app stores.
-* [ ] The web frontend:
-   - [ ] has proper title and metadata.
-   - [ ] has proper open graph metadata, to ensure that it is shown well when shared in social media (Discord, Telegram, Twitter, LinkedIn).
-   - [ ] has a footer, containing the Stability Nexus's logo and pointing to the social media accounts of the Stability Nexus.
-   - [ ] is fully static and client-side.
-   - [ ] is deployed to Github Pages via a Github Workflow.
-   - [ ] is accessible through the https://TODO:PROJECT-NAME.stability.nexus domain.
-* [ ] the project is listed in [https://stability.nexus/protocols](https://stability.nexus/protocols).
+Every current major wallet supports EIP-6963, which lets a page discover injected
+wallets through a local `window` event handshake, with no server in the loop. WalletLink
+builds on that (via wagmi, which already implements it) so extension-wallet
+connection works with zero SaaS dependencies.
+
+Cross-device connection (desktop dapp ↔ phone wallet) is the one thing that
+genuinely needs a relay; there is no production self-hostable WalletConnect relay,
+so WalletLink is injected-only for now and leaves a seam for a relay transport later.
+
+---
+
+## Status
+
+* [x] `createWalletLinkConfig`: wagmi `Config` builder, no `projectId`.
+* [x] `useWalletLink`: headless connect / account hook.
+* [ ] `WalletLinkButton` + `WalletLinkModal`: styled connect UI.
+* [ ] Published to a package registry.
+* [ ] Integrated into a Stability Nexus dapp (Fate-EVM-Frontend is the proof case).
+* [ ] Cross-device (mobile) support via a self-hostable relay transport.
 
 ---
 
 ## Tech Stack
 
-TODO:
-
-### Frontend
-
-TODO:
-
-- Next.js 14+ (React)
 - TypeScript
-- TailwindCSS
-- shadcn/ui
+- React (peer dependency)
+- [wagmi][wagmi] v2 + [viem][viem] (peer dependencies)
+- [@tanstack/react-query][rq] (peer dependency)
+- Built with [tsup][tsup] (ESM + CJS + type declarations)
+- Standards: EIP-1193, EIP-6963
 
-### Blockchain
+No `projectId`, no relay, no hosted service.
 
-TODO:
-
-- Wagmi
-- Solidity Smart Contracts
-- Ethers.js
+[wagmi]: https://wagmi.sh
+[viem]: https://viem.sh
+[rq]: https://tanstack.com/query
+[tsup]: https://tsup.egoist.dev
 
 ---
 
@@ -118,50 +120,95 @@ TODO:
 
 ### Prerequisites
 
-TODO
-
 - Node.js 18+
-- npm/yarn/pnpm
-- MetaMask or any other web3 wallet browser extension
+- An EVM wallet browser extension (MetaMask, Rabby, Frame, …) for testing
+- A React app already using wagmi v2 (or willing to add it)
 
 ### Installation
 
-TODO
-
-#### 1. Clone the Repository
+Install WalletLink alongside its peer dependencies:
 
 ```bash
-git clone https://github.com/StabilityNexus/TODO.git
-cd TODO
+npm install @stability-nexus/walletlink wagmi viem @tanstack/react-query
+# or: yarn add / pnpm add
 ```
 
-#### 2. Install Dependencies
+### 1. Create a config
 
-Using your preferred package manager:
+`createWalletLinkConfig` returns a standard wagmi `Config`. No `projectId`.
 
-```bash
-npm install
-# or
-yarn install
-# or
-pnpm install
+```ts
+// wagmiConfig.ts
+import { sepolia } from 'wagmi/chains'
+import { createWalletLinkConfig } from '@stability-nexus/walletlink'
+
+export const config = createWalletLinkConfig({
+  chains: [sepolia],
+  ssr: true, // set for Next.js; enables cookie-based hydration
+})
 ```
 
-#### 3. Run the Development Server
+Passing `transports` is optional; omit it and each chain gets a default `http()`
+transport. When supplied, it is keyed to `chains`, so leaving a chain out is a
+compile-time error rather than a runtime one.
 
-Start the app locally:
+### 2. Wrap your app
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+Mount wagmi's `WagmiProvider` and a react-query `QueryClientProvider`, exactly as a
+wagmi app already does:
+
+```tsx
+'use client'
+import { WagmiProvider } from 'wagmi'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { config } from './wagmiConfig'
+
+const queryClient = new QueryClient()
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </WagmiProvider>
+  )
+}
 ```
 
-#### 4. Open your Browser
+### 3. Connect with the headless hook
 
-Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
+`useWalletLink` exposes the discovered wallets, connect/disconnect, and the current
+account. Bring your own UI:
+
+```tsx
+'use client'
+import { useWalletLink } from '@stability-nexus/walletlink'
+
+export function Connect() {
+  const { wallets, connect, disconnect, address, isConnected, pendingWallet } =
+    useWalletLink()
+
+  if (isConnected) {
+    return <button onClick={() => disconnect()}>{address}</button>
+  }
+
+  return wallets.map((wallet) => (
+    <button
+      key={wallet.uid}
+      onClick={() => connect(wallet)}
+      disabled={pendingWallet?.uid === wallet.uid}
+    >
+      {wallet.name}
+    </button>
+  ))
+}
+```
+
+> `wallets` is empty during SSR and on the first client render, because EIP-6963
+> discovery is a browser-only handshake, so wagmi appends the announced wallets once
+> `WagmiProvider` mounts. Render a loading/empty state rather than concluding no
+> wallet is installed.
+
+A styled `WalletLinkButton` that packages this flow is coming in a later release.
 
 ---
 
@@ -169,20 +216,32 @@ Navigate to [http://localhost:3000](http://localhost:3000) to see the applicatio
 
 We welcome contributions of all kinds! To contribute:
 
-1. Fork the repository and create your feature branch (`git checkout -b feature/AmazingFeature`).
-2. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-3. Run the development workflow commands to ensure code quality:
+1. Create a feature branch (`git checkout -b feat/your-feature`).
+2. Make your changes and keep them focused: one purpose per pull request.
+3. Run the quality checks before committing:
    - `npm run format:write`
    - `npm run lint:fix`
    - `npm run typecheck`
-4. Push your branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request for review.
+   - `npm run build`
+4. Sign off your commits (`git commit -s`); this project uses the
+   [Developer Certificate of Origin](DCO.md); add yourself to [Contributors.md](Contributors.md).
+5. Open a pull request against `main` for review.
 
-If you encounter bugs, need help, or have feature requests:
+If you encounter bugs, need help, or have feature requests, please open an issue
+with clear detail and any relevant logs.
 
-- Please open an issue in this repository providing detailed information.
-- Describe the problem clearly and include any relevant logs or screenshots.
+---
 
-We appreciate your feedback and contributions!
+## License
+
+WalletLink is licensed under the **GNU General Public License v3.0 (or later) with
+a linking exception**, SPDX `GPL-3.0-or-later WITH Classpath-exception-2.0`. See
+[LICENSE.md](LICENSE.md).
+
+The linking exception means a dapp can import and link WalletLink under **any**
+license without itself becoming GPL. The copyleft applies to WalletLink itself:
+modifications to this library stay free software under the GPL.
+
+---
 
 © 2025 The Stable Order.
