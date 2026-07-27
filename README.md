@@ -55,7 +55,7 @@ finalized Ethereum standards, [EIP-1193][eip1193] (provider interface) and
 key, no third-party service in the connection path.
 
 It is a thin, wagmi-native drop-in replacement for the WalletConnect-based connect
-stacks (RainbowKit, ConnectKit, Web3Modal) that Stability Nexus dapps use today.
+stacks (RainbowKit, ConnectKit, Web3Modal).
 Consumers keep every wagmi hook they already use (`useAccount`, `useWriteContract`,
 …); WalletLink only replaces the connection layer.
 
