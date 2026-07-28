@@ -4,8 +4,10 @@ pnpm-lock.yaml
 package-lock.json
 yarn.lock
 
-# Upstream Stability Nexus template files — left as-is so this PR does not
-# introduce unrelated formatting churn on documentation it does not own.
+# Documentation and license text, kept out of the formatter: LICENSE.md is
+# verbatim GPL-3.0 text that must not be reflowed, and the rest follow the
+# Stability Nexus template conventions rather than this repo's prettier config.
+LICENSE.md
 README.md
 COPYRIGHT.md
 Contributors.md
