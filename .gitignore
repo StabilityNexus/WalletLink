@@ -29,3 +29,6 @@ Thumbs.db
 coverage/
 .turbo/
 *.tsbuildinfo
+
+# npm pack artifacts
+*.tgz

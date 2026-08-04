@@ -11,4 +11,11 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'error',
     },
   },
+  {
+    // Node build scripts run outside the browser and may use Node globals.
+    files: ['scripts/**'],
+    languageOptions: {
+      globals: { console: 'readonly', process: 'readonly' },
+    },
+  },
 )
