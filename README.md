@@ -244,10 +244,21 @@ inject their own stylesheet on first mount.
 For a custom trigger, drive `WalletLinkModal` yourself with your own `open` state:
 
 ```tsx
-const [open, setOpen] = useState(false)
-// ...
-<button onClick={() => setOpen(true)}>Connect</button>
-<WalletLinkModal open={open} onOpenChange={setOpen} />
+'use client'
+import { useState } from 'react'
+import { WalletLinkModal } from '@stability-nexus/walletlink'
+
+export function Connect() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)}>
+        Connect
+      </button>
+      <WalletLinkModal open={open} onOpenChange={setOpen} />
+    </>
+  )
+}
 ```
 
 ---
