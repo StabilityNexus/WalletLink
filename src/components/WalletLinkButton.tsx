@@ -50,10 +50,17 @@ export function WalletLinkButton({ label = 'Connect Wallet' }: WalletLinkButtonP
     )
   }
 
-  const copyAddress = () => {
-    void navigator.clipboard?.writeText(address)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1500)
+  const copyAddress = async () => {
+    if (!navigator.clipboard) return
+    try {
+      await navigator.clipboard.writeText(address)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch {
+      // Clipboard write was blocked or rejected; leave the label unchanged
+      // rather than claiming a copy that did not happen.
+      setCopied(false)
+    }
   }
 
   return (
@@ -68,7 +75,7 @@ export function WalletLinkButton({ label = 'Connect Wallet' }: WalletLinkButtonP
             className="wl-menu-item"
             onSelect={(event) => {
               event.preventDefault()
-              copyAddress()
+              void copyAddress()
             }}
           >
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">

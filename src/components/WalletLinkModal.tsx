@@ -121,7 +121,7 @@ export function WalletLinkModal({ open, onOpenChange }: WalletLinkModalProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {wallet.icon ? (
+                    {isRenderableIcon(wallet.icon) ? (
                       <img className="wl-wallet-icon" src={wallet.icon} alt="" />
                     ) : (
                       <span className="wl-wallet-icon wl-wallet-icon--placeholder" aria-hidden>

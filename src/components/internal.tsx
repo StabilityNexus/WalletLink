@@ -20,12 +20,14 @@ export function truncateAddress(address: Address, chars = 4): string {
 /**
  * Whether an EIP-6963 wallet icon is safe to drop into an `<img src>`.
  *
- * Announced icons are meant to be `data:image/...` URIs; we also allow `https:`
- * for connectors that use a hosted logo. Anything else (notably `javascript:`)
- * is rejected and the caller falls back to a text placeholder.
+ * Only self-contained `data:image/...` URIs are accepted, which is the form
+ * EIP-6963 prescribes for the announced icon. A remote `https:` URL is rejected:
+ * an announced connector could point it at any host, and rendering it would leak
+ * request metadata to that host before the user has picked anything. Rejected
+ * values fall back to a text placeholder.
  */
 export function isRenderableIcon(icon: string | undefined): icon is string {
-  return typeof icon === 'string' && (icon.startsWith('data:image/') || icon.startsWith('https://'))
+  return typeof icon === 'string' && icon.startsWith('data:image/')
 }
 
 /** A neutral person glyph standing in for the connected account. */

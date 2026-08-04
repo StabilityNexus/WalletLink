@@ -220,7 +220,7 @@ export function Connect() {
 > `WagmiProvider` mounts. Render a loading/empty state rather than concluding no
 > wallet is installed.
 
-### 3. …or drop in the connect UI
+### 4. …or drop in the connect UI
 
 If you would rather not build the UI, render `WalletLinkButton`. It packages the
 whole flow: a connect button that opens a wallet-picker modal, and, once connected,
