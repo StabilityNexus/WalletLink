@@ -61,9 +61,8 @@ Consumers keep every wagmi hook they already use (`useAccount`, `useWriteContrac
 
 > [!NOTE]
 > **Pre-release.** The package is not yet published to a registry and the API may
-> still change. The connect-UI components (`WalletLinkButton`, `WalletLinkModal`)
-> are in progress; today the library ships the config builder and the headless
-> hook.
+> still change. It ships the config builder, the headless `useWalletLink` hook, and
+> the styled connect UI (`WalletLinkButton`, `WalletLinkModal`).
 
 [eip1193]: https://eips.ethereum.org/EIPS/eip-1193
 [eip6963]: https://eips.ethereum.org/EIPS/eip-6963
@@ -93,7 +92,7 @@ so WalletLink is injected-only for now and leaves a seam for a relay transport l
 
 - [x] `createWalletLinkConfig`: wagmi `Config` builder, no `projectId`.
 - [x] `useWalletLink`: headless connect / account hook.
-- [ ] `WalletLinkButton` + `WalletLinkModal`: styled connect UI.
+- [x] `WalletLinkButton` + `WalletLinkModal`: styled connect UI.
 - [ ] Published to a package registry.
 - [ ] Integrated into a Stability Nexus dapp (Fate-EVM-Frontend is the proof case).
 - [ ] Cross-device (mobile) support via a self-hostable relay transport.
@@ -221,7 +220,107 @@ export function Connect() {
 > `WagmiProvider` mounts. Render a loading/empty state rather than concluding no
 > wallet is installed.
 
-A styled `WalletLinkButton` that packages this flow is coming in a later release.
+### 4. …or drop in the connect UI
+
+If you would rather not build the UI, render `WalletLinkButton`. It packages the
+whole flow: a connect button that opens a wallet-picker modal, and, once connected,
+an account avatar with a menu to copy the address or disconnect.
+
+```tsx
+'use client'
+import { WalletLinkButton } from '@stability-nexus/walletlink'
+
+export function Header() {
+  return <WalletLinkButton />
+}
+```
+
+`label` sets the disconnected button text (default `Connect Wallet`). The modal
+lists the EIP-6963 wallets the browser announced; for popular wallets that are not
+installed it shows an install link instead (WalletLink has no relay, so an absent
+wallet can be installed but not connected). It needs no CSS import: the components
+inject their own stylesheet on first mount.
+
+For a custom trigger, drive `WalletLinkModal` yourself with your own `open` state:
+
+```tsx
+'use client'
+import { useState } from 'react'
+import { WalletLinkModal } from '@stability-nexus/walletlink'
+
+export function Connect() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)}>
+        Connect
+      </button>
+      <WalletLinkModal open={open} onOpenChange={setOpen} />
+    </>
+  )
+}
+```
+
+---
+
+## Styling
+
+The connect UI ships with a neutral light/dark theme and needs no configuration. It
+is built on unstyled [Radix][radix] primitives skinned by a single stylesheet the
+components inject on first mount, so there is nothing to import and no Tailwind
+config to add on the consumer side.
+
+### Theme follows your app
+
+The default theme is light. WalletLink switches to dark when your app marks the page
+dark the way most apps already do, either signal works:
+
+- a `dark` class on `<html>` (Tailwind's class strategy, `class="dark"`), or
+- `<html data-theme="dark">`.
+
+It deliberately does **not** follow the OS `prefers-color-scheme` on its own, so an
+app that stays light while the OS is dark is not forced dark against its will.
+
+### Overriding the look
+
+Every color, radius, and font is a CSS custom property read from `:root`. Set any of
+them on `:root` (or on any element that contains the button) and WalletLink picks it
+up, with no build step and no `!important`: the library's own rules are written at
+zero specificity, so a plain selector always wins.
+
+```css
+:root {
+  --walletlink-accent: #7c3aed; /* connect button + focus/spinner accent */
+  --walletlink-radius: 16px; /* modal corners */
+  --walletlink-radius-sm: 10px; /* button + row corners */
+  --walletlink-font: 'Inter', sans-serif;
+}
+```
+
+The full set (each has a sensible light and dark default):
+
+| Variable                                             | What it controls                       |
+| ---------------------------------------------------- | -------------------------------------- |
+| `--walletlink-accent` / `-accent-hover`              | Primary button, focus ring, spinner    |
+| `--walletlink-accent-fg`                             | Text on the accent button              |
+| `--walletlink-danger`                                | Disconnect item, error text            |
+| `--walletlink-surface`                               | Modal and menu background              |
+| `--walletlink-fg` / `-muted`                         | Primary and secondary text             |
+| `--walletlink-border` / `-hover`                     | Dividers and hover backgrounds         |
+| `--walletlink-overlay` / `-shadow`                   | Modal backdrop and elevation           |
+| `--walletlink-radius` / `-radius-sm`                 | Corner rounding                        |
+| `--walletlink-font`                                  | Font family (inherits by default)      |
+| `--walletlink-avatar-bg` / `-line` / `-fg`           | Connected-state avatar fill/outline    |
+
+To theme dark mode independently, set the variables under your dark selector:
+
+```css
+:root.dark {
+  --walletlink-accent: #a78bfa;
+}
+```
+
+[radix]: https://www.radix-ui.com/primitives
 
 ---
 
