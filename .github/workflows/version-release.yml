@@ -70,19 +70,29 @@ jobs:
         run: |
           VERSION="${{ steps.get_version.outputs.version }}"
           if git show-ref --tags --verify --quiet "refs/tags/v$VERSION"; then
-            echo "Error: Tag v$VERSION already exists"
-            exit 1
+            EXISTING_SHA=$(git rev-list -n 1 "refs/tags/v$VERSION")
+            HEAD_SHA=$(git rev-parse HEAD)
+            if [ "$EXISTING_SHA" != "$HEAD_SHA" ]; then
+              echo "Error: Tag v$VERSION already exists and points to a different commit ($EXISTING_SHA)"
+              exit 1
+            fi
+            echo "✓ Tag v$VERSION already exists at the current commit; resuming an incomplete release"
+          else
+            echo "✓ Tag v$VERSION does not exist yet"
           fi
-          echo "✓ Tag v$VERSION does not exist yet"
 
       - name: Create and push tag
         run: |
           VERSION="${{ steps.get_version.outputs.version }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "v$VERSION" -m "Release version $VERSION"
-          git push origin "v$VERSION"
-          echo "✓ Created and pushed tag v$VERSION"
+          if git show-ref --tags --verify --quiet "refs/tags/v$VERSION"; then
+            echo "✓ Tag v$VERSION already exists at the current commit; skipping creation"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag -a "v$VERSION" -m "Release version $VERSION"
+            git push origin "v$VERSION"
+            echo "✓ Created and pushed tag v$VERSION"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -102,8 +112,10 @@ jobs:
               repo: context.repo.repo,
             });
 
-            // Find the draft release
-            const draftRelease = releases.find(release => release.draft === true);
+            // Find the draft release for this version
+            const draftRelease = releases.find(
+              release => release.draft === true && release.tag_name === version,
+            );
 
             if (draftRelease) {
               console.log(`Found draft release: ${draftRelease.name}`);
