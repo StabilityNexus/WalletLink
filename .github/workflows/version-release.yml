@@ -66,6 +66,33 @@ jobs:
           fi
           echo "✓ Version format is valid: $VERSION"
 
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+
+      - name: Sync package.json version
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          echo "✓ package.json version synced to $VERSION"
+
+      - name: Commit package.json version sync
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- package.json package-lock.json; then
+            echo "✓ package.json already at $VERSION; nothing to commit"
+          else
+            git add package.json package-lock.json
+            git commit -m "chore: sync package.json version to $VERSION"
+            git push origin HEAD:main
+            echo "✓ Committed and pushed package.json version sync"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Check if tag already exists
         run: |
           VERSION="${{ steps.get_version.outputs.version }}"
