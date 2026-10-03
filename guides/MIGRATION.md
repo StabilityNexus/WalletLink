@@ -14,7 +14,7 @@ Proof case: `StabilityNexus/Fate-EVM-Frontend` PR #150 is a complete worked exam
 ## Using this with Claude Code
 
 Point Claude at this file and the repo you are migrating, for example:
-"Follow `skills/MIGRATION.md` from the WalletLink repo to migrate this frontend to
+"Follow `guides/MIGRATION.md` from the WalletLink repo to migrate this frontend to
 WalletLink." Claude should run Step 0 first and confirm the variant before editing.
 
 ---
@@ -117,8 +117,9 @@ In the provider module (often `src/context/walletProvider.tsx` or a providers fi
 - Remove `NEXT_PUBLIC_PROJECT_ID` (and any Reown/WalletConnect project id) from
   `.env` / `env.example`, `CONTRIBUTING.md`, `AGENTS.md`, and the README. Update any
   "stack" notes that still mention RainbowKit.
-- Grep once more to confirm nothing is left:
-  `grep -rnE "@rainbow-me|rainbowkit|RainbowKit|getDefaultConfig|NEXT_PUBLIC_PROJECT_ID|@reown" src/ *.md env.example`
+- Grep once more to confirm nothing is left (includes `package.json`; the lockfile is
+  excluded on purpose, since transitive `@walletconnect` entries there are expected):
+  `grep -rnE "@rainbow-me|rainbowkit|RainbowKit|getDefaultConfig|NEXT_PUBLIC_PROJECT_ID|@reown|@walletconnect" src/ package.json *.md env.example`
 
 ---
 
