@@ -60,9 +60,10 @@ Consumers keep every wagmi hook they already use (`useAccount`, `useWriteContrac
 …); WalletLink only replaces the connection layer.
 
 > [!NOTE]
-> **Pre-release.** The package is not yet published to a registry and the API may
-> still change. It ships the config builder, the headless `useWalletLink` hook, and
-> the styled connect UI (`WalletLinkButton`, `WalletLinkModal`).
+> **Published** on npm as [`@stability-nexus/walletlink`](https://www.npmjs.com/package/@stability-nexus/walletlink).
+> It ships the config builder, the headless `useWalletLink` hook, and the styled
+> connect UI (`WalletLinkButton`, `WalletLinkModal`). The API may still change
+> before 1.0.
 
 [eip1193]: https://eips.ethereum.org/EIPS/eip-1193
 [eip6963]: https://eips.ethereum.org/EIPS/eip-6963
@@ -93,8 +94,8 @@ so WalletLink is injected-only for now and leaves a seam for a relay transport l
 - [x] `createWalletLinkConfig`: wagmi `Config` builder, no `projectId`.
 - [x] `useWalletLink`: headless connect / account hook.
 - [x] `WalletLinkButton` + `WalletLinkModal`: styled connect UI.
-- [ ] Published to a package registry.
-- [ ] Integrated into a Stability Nexus dapp (Fate-EVM-Frontend is the proof case).
+- [x] Published to a package registry (npm: `@stability-nexus/walletlink`).
+- [x] Integrated into a Stability Nexus dapp (Fate-EVM-Frontend is the proof case).
 - [ ] Cross-device (mobile) support via a self-hostable relay transport.
 
 ---
@@ -127,12 +128,7 @@ No `projectId`, no relay, no hosted service.
 
 ### Installation
 
-> Not published yet. The registry command below is how you will install WalletLink
-> once the first release is out. Until then, use it from source: clone this repo,
-> run `npm install && npm run build`, and link the result into your app (for
-> example with `npm link`, or a file/git dependency that builds the `dist` output).
-
-Once published, install WalletLink alongside its peer dependencies:
+Install WalletLink alongside its peer dependencies:
 
 ```bash
 npm install @stability-nexus/walletlink wagmi viem @tanstack/react-query
