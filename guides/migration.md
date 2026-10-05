@@ -11,11 +11,12 @@ repeat that; it only lists what to remove and change.
 
 Proof case: `StabilityNexus/Fate-EVM-Frontend` PR #150 is a complete worked example.
 
-## Using this with Claude Code
+## Using this with an AI coding agent
 
-Point Claude at this file and the repo you are migrating, for example:
-"Follow `guides/MIGRATION.md` from the WalletLink repo to migrate this frontend to
-WalletLink." Claude should run Step 0 first and confirm the variant before editing.
+Point an AI coding agent (for example Claude Code, Cursor, GitHub Copilot, or Codex) at
+this file and the repo you are migrating, for example: "Follow `guides/migration.md` from
+the WalletLink repo to migrate this frontend to WalletLink." The agent should run Step 0
+first and confirm the variant before editing.
 
 ---
 
