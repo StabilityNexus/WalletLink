@@ -13,6 +13,7 @@ export type WalletLinkModalProps = {
   open: boolean
   /** Called when the modal requests to open or close (backdrop, Esc, close button). */
   onOpenChange: (open: boolean) => void
+  styleNonce?: string
 }
 
 /**
@@ -25,8 +26,8 @@ export type WalletLinkModalProps = {
  * Usually rendered for you by {@link WalletLinkButton}; use it directly only to
  * drive the picker from your own trigger.
  */
-export function WalletLinkModal({ open, onOpenChange }: WalletLinkModalProps) {
-  useWalletLinkStyles()
+export function WalletLinkModal({ open, onOpenChange, styleNonce }: WalletLinkModalProps) {
+  useWalletLinkStyles(styleNonce)
   const { wallets, connect, pendingWallet, error, isConnected, reset } = useWalletLink()
 
   // Dismiss automatically once a wallet is connected.

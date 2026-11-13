@@ -8,6 +8,7 @@ import { WalletLinkModal } from './WalletLinkModal'
 export type WalletLinkButtonProps = {
   /** Text on the connect button while disconnected. Defaults to `Connect Wallet`. */
   label?: string
+  styleNonce?: string
 }
 
 /**
@@ -26,8 +27,8 @@ export type WalletLinkButtonProps = {
  * }
  * ```
  */
-export function WalletLinkButton({ label = 'Connect Wallet' }: WalletLinkButtonProps) {
-  useWalletLinkStyles()
+export function WalletLinkButton({ label = 'Connect Wallet', styleNonce }: WalletLinkButtonProps) {
+  useWalletLinkStyles(styleNonce)
   const { address, isConnected, disconnect } = useWalletLink()
   const [modalOpen, setModalOpen] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -45,7 +46,7 @@ export function WalletLinkButton({ label = 'Connect Wallet' }: WalletLinkButtonP
         <button type="button" className="wl-connect-btn" onClick={() => setModalOpen(true)}>
           {label}
         </button>
-        <WalletLinkModal open={modalOpen} onOpenChange={setModalOpen} />
+        <WalletLinkModal open={modalOpen} onOpenChange={setModalOpen} styleNonce={styleNonce} />
       </>
     )
   }

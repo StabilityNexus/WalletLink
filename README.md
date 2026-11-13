@@ -237,6 +237,16 @@ installed it shows an install link instead (WalletLink has no relay, so an absen
 wallet can be installed but not connected). It needs no CSS import: the components
 inject their own stylesheet on first mount.
 
+If your app uses a nonce-based `style-src` Content Security Policy, pass the nonce
+to the components so the injected stylesheet is allowed:
+
+```tsx
+<WalletLinkButton styleNonce={nonce} />
+```
+
+`WalletLinkModal` accepts the same `styleNonce` prop when you drive the picker
+directly. The nonce is set on the `<style>` element before it is inserted.
+
 For a custom trigger, drive `WalletLinkModal` yourself with your own `open` state:
 
 ```tsx
