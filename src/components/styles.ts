@@ -351,18 +351,20 @@ const CSS = `
 }
 `
 
-let injected = false
-
 /**
  * Inject the connect-UI stylesheet once. No-op on the server, on repeat calls,
  * or if a tag with the same id is already present (e.g. after an HMR reload).
  */
-export function injectWalletLinkStyles(): void {
-  if (injected || typeof document === 'undefined') return
-  injected = true
-  if (document.getElementById(STYLE_ELEMENT_ID)) return
+export function injectWalletLinkStyles(nonce?: string): void {
+  if (typeof document === 'undefined') return
+  const existing = document.getElementById(STYLE_ELEMENT_ID)
+  if (existing) {
+    if (nonce === undefined || existing.nonce === nonce) return
+    existing.remove()
+  }
   const style = document.createElement('style')
   style.id = STYLE_ELEMENT_ID
+  if (nonce !== undefined) style.nonce = nonce
   style.textContent = CSS
   document.head.appendChild(style)
 }

@@ -4,12 +4,12 @@ import type { Address } from 'viem'
 import { injectWalletLinkStyles } from './styles'
 
 /** Inject the connect-UI stylesheet on mount (client only, once per page). */
-export function useWalletLinkStyles(): void {
+export function useWalletLinkStyles(nonce?: string): void {
   // useInsertionEffect runs before layout is read, so styles are present before
   // the browser paints the component — no flash of unstyled markup.
   useInsertionEffect(() => {
-    injectWalletLinkStyles()
-  }, [])
+    injectWalletLinkStyles(nonce)
+  }, [nonce])
 }
 
 /** `0x1234…abcd` — enough to recognize an account without showing the whole thing. */
