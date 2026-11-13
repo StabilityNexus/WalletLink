@@ -359,7 +359,7 @@ export function injectWalletLinkStyles(nonce?: string): void {
   if (typeof document === 'undefined') return
   const existing = document.getElementById(STYLE_ELEMENT_ID)
   if (existing) {
-    if (nonce === undefined || existing.getAttribute('nonce') === nonce) return
+    if (nonce === undefined || existing.nonce === nonce) return
     existing.remove()
   }
   const style = document.createElement('style')
